@@ -27,6 +27,10 @@ function RobinhoodWebApi(opts, callback) {
         dividends:  'https://api.robinhood.com/dividends/',
         edocuments: 'https://api.robinhood.com/documents/',
         instruments:  'https://api.robinhood.com/instruments/',
+        sp500_up: 'https://api.robinhood.com/midlands/movers/sp500/?direction=up',
+        sp500_down: 'https://api.robinhood.com/midlands/movers/sp500/?direction=down',
+        news: 'https://api.robinhood.com/midlands/news/',
+        fundamentals: 'https://api.robinhood.com/fundamentals/',
         margin_upgrade:  'https://api.robinhood.com/margin/upgrades/',
         markets:  'https://api.robinhood.com/markets/',
         notifications:  'https://api.robinhood.com/notifications/',
@@ -35,7 +39,7 @@ function RobinhoodWebApi(opts, callback) {
         quotes: 'https://api.robinhood.com/quotes/',
         document_requests:  'https://api.robinhood.com/upload/document_requests/',
         user: 'https://api.robinhood.com/user/',
-        watchlists: 'https://api.robinhood.com/watchlists/',
+        watchlists: 'https://api.robinhood.com/watchlists/',        
         positions: 'https://api.robinhood.com/positions/'
     },
     _isInit = false,
@@ -125,6 +129,81 @@ function RobinhoodWebApi(opts, callback) {
     return _request.get({
         uri: _endpoints.instruments,
         qs: {'query': symbol.toUpperCase()}
+      }, callback);
+  };
+
+  api.fundamentals = function(symbol, callback){
+    return _request.get({
+        uri: [_endpoints.fundamentals,'/'].join(symbol)
+      }, callback);
+  };
+
+  api.news = function(symbol, callback){
+    return _request.get({
+        uri: [_endpoints.news,'/'].join(symbol)
+      }, callback);
+  };
+
+  api.create_watch_list = function(name, callback){
+    return _request.post({
+        uri: _endpoints.watchlists,
+        form: {
+          name
+        }
+      }, callback);
+  };
+
+  api.watchlists = function(callback){
+    return _request.get({
+        uri: _endpoint.watchlists
+      }, callback);
+  };
+
+  api.splits = function(instrument, callback){
+    return _request.get({
+        uri: [_endpoints.instruments,'/splits/'].join(instrument)
+      }, callback);
+  };
+
+  api.endpoint = function(endpoint, callback){
+    return _request.get({
+        uri: _endpoints[endpoint] 
+      }, callback);
+  };
+
+  api.markets = function(callback){
+    return _request.get({
+      uri: _endpoints.markets
+    }, callback);
+  };
+
+  api.sp500_up = function(callback){
+    return _request.get({
+      uri: _endpoints.sp500_up
+    }, callback);
+  };
+
+  api.sp500_down = function(callback){
+    return _request.get({
+      uri: _endpoints.sp500_down
+    }, callback);
+  };
+
+  api.get = function(endpoint, callback){
+    return _request.get({
+        uri: endpoint
+      }, callback);
+  };
+
+  api.endpoint = function(endpoint, callback){
+    return _request.get({
+      uri: _endpoints[endpoint]
+    }, callback);
+  };
+
+  api.historical_quote_data = function(symbol, intv, span, callback){
+    return _request.get({
+        uri: [_endpoints.quotes + 'historicals/','/?interval='+intv+'&span='+span].join(symbol)
       }, callback);
   };
 
